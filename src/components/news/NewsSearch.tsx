@@ -45,9 +45,9 @@ const styles = (theme: Theme) =>
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: '12ch',
+        width: '15em',
         '&:focus': {
-          width: '20ch',
+          width: '20em',
         },
       },
     },
@@ -73,21 +73,18 @@ class NewsSearch extends React.Component<Props, State> {
   }
 
   onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: event.target.value });
-    this.debouncedSearchNews(event);
+    this.setState({ value: event.target.value }, () =>
+      this.debouncedSearchNews()
+    );
   };
 
-  searchNews = (event: React.FormEvent) => {
-    event.preventDefault();
+  searchNews = () => {
     this.props.onSearchNews(this.state.value);
   };
 
-  debouncedSearchNews = debounce(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      this.searchNews(event);
-    },
-    700
-  );
+  debouncedSearchNews = debounce(() => {
+    this.searchNews();
+  }, 400);
 
   render() {
     const { classes } = this.props;
@@ -102,6 +99,7 @@ class NewsSearch extends React.Component<Props, State> {
             root: classes.inputRoot,
             input: classes.inputInput,
           }}
+          style={{ backgroundColor: 'rgb(0 101 245 / 27%)' }}
           inputProps={{ 'aria-label': 'search' }}
           value={this.state.value}
           onChange={this.onChangeHandler}

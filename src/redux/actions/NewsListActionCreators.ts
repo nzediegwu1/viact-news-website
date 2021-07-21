@@ -23,6 +23,7 @@ export const getNewsSuccess = (
     originalArticles: results,
   };
 };
+
 export const searchNewsSuccess = (
   results: NewsModel[]
 ): SearchNewsListSuccessAction => {

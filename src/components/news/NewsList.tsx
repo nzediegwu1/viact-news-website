@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
 import {
   createStyles,
   lighten,
@@ -18,51 +19,16 @@ import {
   TablePagination,
   TableHead,
   TableContainer,
-  FormControlLabel,
-  Tooltip,
-  Switch,
-  IconButton,
-  Checkbox,
+  Container,
+  Card,
+  CardActionArea,
+  Button,
 } from '@material-ui/core';
 
-import {
-  FilterList as FilterListIcon,
-  Delete as DeleteIcon,
-} from '@material-ui/icons';
-
-interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-): Data {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
+import NewsSearch from './NewsSearch';
+import { connect } from 'react-redux';
+import { searchNews } from '../../redux/actions/NewsListActionCreators';
+import NewsModel from '../../api/model/NewsModel';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -100,82 +66,73 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof NewsModel;
   label: string;
-  numeric: boolean;
+  align: 'left' | 'right' | 'center';
 }
 
 const headCells: HeadCell[] = [
   {
-    id: 'name',
-    numeric: false,
+    id: 'image',
+    align: 'center',
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'Image',
   },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'source', align: 'left', disablePadding: false, label: 'Source' },
+  { id: 'author', align: 'left', disablePadding: false, label: 'Author' },
+  { id: 'title', align: 'left', disablePadding: false, label: 'Title' },
+  { id: 'date', align: 'left', disablePadding: false, label: 'Date' },
+  { id: 'url', align: 'right', disablePadding: false, label: 'URL' },
 ];
 
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
-  numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof NewsModel
   ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof NewsModel) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
+            className={classes.tableHead}
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
+            {headCell.id === 'date' ? (
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+                className={classes.tableHead}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === 'desc'
+                      ? 'sorted descending'
+                      : 'sorted ascending'}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            ) : (
+              headCell.label
+            )}
           </TableCell>
         ))}
       </TableRow>
@@ -205,52 +162,23 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
-
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
+const EnhancedTableToolbar = ({ children }: any) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
 
   return (
     <Toolbar
       className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
+        [classes.highlight]: false,
       })}
     >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Nutrition
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        {children}
+      </Typography>
     </Toolbar>
   );
 };
@@ -259,13 +187,27 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      boxShadow: '0px 0px 7px 0px dodgerblue',
+    },
+    imageWidth: {
+      maxWidth: 345,
+    },
+    imageHeight: {
+      height: 140,
     },
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
+      paddingLeft: '1.5em',
+      marginTop: '3em',
     },
     table: {
       minWidth: 750,
+    },
+    tableHead: {
+      backgroundColor: '#3f51b5',
+      color: 'white',
+      paddingLeft: '1em',
     },
     visuallyHidden: {
       border: 0,
@@ -281,51 +223,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NewsList: FunctionComponent = () => {
+interface Props {
+  news: NewsModel[];
+  searchNews: (term: string) => void;
+}
+
+const NewsList: FunctionComponent<Props> = (props: Props) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [orderBy, setOrderBy] = React.useState<keyof NewsModel>('date');
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => {
+  const handleRequestSort = (_: any, property: keyof NewsModel) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -339,97 +252,126 @@ const NewsList: FunctionComponent = () => {
     setPage(0);
   };
 
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const { news, searchNews } = props;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, news.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+    <Container maxWidth="lg">
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar>
+            <NewsSearch onSearchNews={searchNews} />
+          </EnhancedTableToolbar>
+          <TableContainer style={{ overflowY: 'auto', maxHeight: '500px' }}>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={'medium'}
+              stickyHeader
+              aria-label="sticky table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={news.length}
+              />
+              <TableBody>
+                {stableSort(news as NewsModel[], getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow
+                        key={row.url}
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
                       >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </div>
+                        <TableCell
+                          width="20%"
+                          component="th"
+                          scope="row"
+                          padding="none"
+                          align="center"
+                        >
+                          <Card className={classes.imageWidth}>
+                            <CardActionArea>
+                              <img
+                                style={{
+                                  height: 140,
+                                  maxWidth: 345,
+                                  paddingTop: '1em',
+                                  paddingBottom: '1em',
+                                }}
+                                src={row.image}
+                              />
+                            </CardActionArea>
+                          </Card>
+                        </TableCell>
+                        <TableCell width="10%" align="left">
+                          {row.source}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            whiteSpace: 'normal',
+                            wordBreak: 'break-word',
+                          }}
+                          width="15%"
+                          align="left"
+                        >
+                          {row.author}
+                        </TableCell>
+                        <TableCell width="35%" align="left">
+                          {row.title}
+                        </TableCell>
+                        <TableCell width="10%" align="left">
+                          {/* {new Date(row.date).toUTCString()} */}
+                          {dayjs(row.date).format('DD MMM YYYY')} @
+                          {dayjs(row.date).format('hh:mm a')}
+                        </TableCell>
+                        <TableCell width="10%" align="right">
+                          <a target="_blank" rel="noopener" href={row.url}>
+                            <Button variant="contained" color="primary">
+                              Link
+                            </Button>
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 55 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <br /> <br />
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            labelRowsPerPage="Per Page"
+            count={news.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            style={{ display: 'flex' }}
+          />
+        </Paper>
+      </div>
+    </Container>
   );
 };
 
-export default NewsList;
+const mapDispatchToProps = (dispatch: Function) => {
+  return {
+    searchNews: (term: string) => dispatch(searchNews(term)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(NewsList);
