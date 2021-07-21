@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import AppState from '../redux/state/AppState';
 import { getNews, searchNews } from '../redux/actions/NewsListActionCreators';
-import NewsSearch from './news/NewsSearch';
+import NewsSearch from './news/NewsSearch/NewsSearch';
 import NavigationBar from './NavigationBar';
 import NewsListState from '../redux/state/NewsListState';
 import NewsListContainer from './news/NewsListContainer';
