@@ -68,23 +68,16 @@ class NewsSearch extends React.Component<Props, State> {
     this.state = { value: '' };
   }
 
-  componentDidMount() {
-    this.setState({ value: '' });
-  }
-
-  onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: event.target.value }, () =>
+  onChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    await this.setState({ value: event.target.value }, () =>
       this.debouncedSearchNews()
     );
-  };
-
-  searchNews = () => {
-    this.props.onSearchNews(this.state.value);
+    console.log(this.state.value);
   };
 
   debouncedSearchNews = debounce(() => {
-    this.searchNews();
-  }, 400);
+    this.props.onSearchNews(this.state.value);
+  }, 0);
 
   render() {
     const { classes } = this.props;
