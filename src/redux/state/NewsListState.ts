@@ -1,4 +1,4 @@
-import NewsModel from '../../api/model/NewsModel';
+import NewsModel from '../../api/models/NewsModel';
 
 export default interface NewsListState {
   totalResults: number;

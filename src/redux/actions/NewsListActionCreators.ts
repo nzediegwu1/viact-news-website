@@ -6,7 +6,7 @@ import {
   NewsActionTypes,
   SearchNewsListSuccessAction,
 } from './NewsActions';
-import NewsModel from '../../api/model/NewsModel';
+import NewsModel from '../../api/models/NewsModel';
 
 export const getNewsStart = (): GetNewsListStartAction => {
   return {

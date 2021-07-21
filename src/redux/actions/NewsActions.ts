@@ -1,4 +1,4 @@
-import NewsModel from '../../api/model/NewsModel';
+import NewsModel from '../../api/models/NewsModel';
 
 export enum NewsActionTypes {
   GET_NEWS_LIST_START = 'GET_NEWS_LIST_START',

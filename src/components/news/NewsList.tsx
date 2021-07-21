@@ -17,7 +17,7 @@ import {
   Button,
 } from '@material-ui/core';
 
-import NewsModel from '../../api/model/NewsModel';
+import NewsModel from '../../api/models/NewsModel';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) return -1;
