@@ -10,6 +10,61 @@ import { connect } from 'react-redux';
 import NewsSearch from './NewsSearch/NewsSearch';
 import EnhancedTableToolbar from './EnhancedToolBar/EnhancedToolbar';
 
+import clsx from 'clsx';
+import {
+  createStyles,
+  lighten,
+  makeStyles,
+  Theme,
+} from '@material-ui/core/styles';
+import { Typography, Toolbar, Button, Container } from '@material-ui/core';
+import { searchNews } from '../../redux/actions/NewsListActionCreators';
+import { connect } from 'react-redux';
+import NewsSearch from './NewsSearch';
+
+const useToolbarStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(1),
+    },
+    highlight:
+      theme.palette.type === 'light'
+        ? {
+            color: theme.palette.secondary.main,
+            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          }
+        : {
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.dark,
+          },
+    title: {
+      flex: '1 1 100%',
+    },
+  })
+);
+
+const EnhancedTableToolbar = ({ children }: any) => {
+  const classes = useToolbarStyles();
+
+  return (
+    <Toolbar
+      className={clsx(classes.root, {
+        [classes.highlight]: false,
+      })}
+    >
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        <div style={{ display: 'flex' }}>{children} &nbsp;</div>
+      </Typography>
+    </Toolbar>
+  );
+};
+
 interface Props {
   newsList: NewsListState;
   searchNews: (term: string) => void;

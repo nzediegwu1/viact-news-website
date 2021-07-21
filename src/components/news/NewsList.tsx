@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import clsx from 'clsx';
 import dayjs from 'dayjs';
 import {
   createStyles,
-  lighten,
   makeStyles,
   Theme,
 } from '@material-ui/core/styles';
@@ -12,8 +10,6 @@ import {
   TableBody,
   TableCell,
   Paper,
-  Typography,
-  Toolbar,
   TableSortLabel,
   TableRow,
   TablePagination,
@@ -25,9 +21,6 @@ import {
   Button,
 } from '@material-ui/core';
 
-import NewsSearch from './NewsSearch';
-import { connect } from 'react-redux';
-import { searchNews } from '../../redux/actions/NewsListActionCreators';
 import NewsModel from '../../api/model/NewsModel';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -74,7 +67,7 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   {
     id: 'image',
-    align: 'center',
+    align: 'left',
     disablePadding: true,
     label: 'Image',
   },
@@ -140,49 +133,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const useToolbarStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
-    },
-    highlight:
-      theme.palette.type === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: '1 1 100%',
-    },
-  })
-);
-
-const EnhancedTableToolbar = ({ children }: any) => {
-  const classes = useToolbarStyles();
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: false,
-      })}
-    >
-      <Typography
-        className={classes.title}
-        variant="h6"
-        id="tableTitle"
-        component="div"
-      >
-        {children}
-      </Typography>
-    </Toolbar>
-  );
-};
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -199,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       marginBottom: theme.spacing(2),
       paddingLeft: '1.5em',
-      marginTop: '3em',
+      paddingTop: '1.5em',
     },
     table: {
       minWidth: 750,
@@ -225,7 +175,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   news: NewsModel[];
-  searchNews: (term: string) => void;
 }
 
 const NewsList: FunctionComponent<Props> = (props: Props) => {
@@ -252,7 +201,7 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
     setPage(0);
   };
 
-  const { news, searchNews } = props;
+  const { news } = props;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, news.length - page * rowsPerPage);
@@ -261,9 +210,6 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
     <Container maxWidth="lg">
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar>
-            <NewsSearch onSearchNews={searchNews} />
-          </EnhancedTableToolbar>
           <TableContainer style={{ overflowY: 'auto', maxHeight: '500px' }}>
             <Table
               className={classes.table}
@@ -328,7 +274,6 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
                           {row.title}
                         </TableCell>
                         <TableCell width="10%" align="left">
-                          {/* {new Date(row.date).toUTCString()} */}
                           {dayjs(row.date).format('DD MMM YYYY')} @
                           {dayjs(row.date).format('hh:mm a')}
                         </TableCell>
@@ -352,7 +297,7 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
           </TableContainer>
           <br /> <br />
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10]}
             component="div"
             labelRowsPerPage="Per Page"
             count={news.length}
@@ -368,10 +313,4 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Function) => {
-  return {
-    searchNews: (term: string) => dispatch(searchNews(term)),
-  };
-};
-
-export default connect(null, mapDispatchToProps)(NewsList);
+export default NewsList;
