@@ -32,17 +32,13 @@ export class App extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    newsList: state.newsListState,
-  };
-};
+const mapStateToProps = (state: AppState) => ({
+  newsList: state.newsListState,
+});
 
-const mapDispatchToProps = (dispatch: Function) => {
-  return {
-    getNews: () => dispatch(getNews()),
-    searchNews: (term: string) => dispatch(searchNews(term)),
-  };
-};
+const mapDispatchToProps = (dispatch: Function) => ({
+  getNews: () => dispatch(getNews()),
+  searchNews: (term: string) => dispatch(searchNews(term)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
