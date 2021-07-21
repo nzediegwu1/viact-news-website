@@ -2,13 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Grid } from '@material-ui/core';
 import NewsListState from '../../redux/state/NewsListState';
 import ProgressBar from '../ProgressBar';
-import NewsList from './NewsList/NewsList';
-
-import { Container } from '@material-ui/core';
-import { searchNews } from '../../redux/actions/NewsListActionCreators';
-import { connect } from 'react-redux';
-import NewsSearch from './NewsSearch/NewsSearch';
-import EnhancedTableToolbar from './EnhancedToolBar/EnhancedToolbar';
+import NewsList from './NewsList';
 
 import clsx from 'clsx';
 import {

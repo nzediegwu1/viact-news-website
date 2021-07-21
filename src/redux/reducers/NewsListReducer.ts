@@ -34,13 +34,6 @@ const NewsListReducer: Reducer<NewsListState, NewsListActions> = (
         isFetching: false,
       };
     }
-    case NewsActionTypes.SEARCH_NEWS_LIST_SUCCESS: {
-      return {
-        ...state,
-        articles: action.articles,
-        isFetching: false,
-      };
-    }
     default:
       return state;
   }
