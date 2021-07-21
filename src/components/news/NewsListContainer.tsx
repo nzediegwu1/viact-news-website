@@ -17,7 +17,7 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core/styles';
-import { Typography, Toolbar, Button, Container } from '@material-ui/core';
+import { Typography, Toolbar, Container } from '@material-ui/core';
 import { searchNews } from '../../redux/actions/NewsListActionCreators';
 import { connect } from 'react-redux';
 import NewsSearch from './NewsSearch';
