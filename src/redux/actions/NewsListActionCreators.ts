@@ -3,7 +3,6 @@ import { NewsApi } from '../../api/rest/NewsApi';
 import {
   GetNewsListStartAction,
   GetNewsListSuccessAction,
-  GetNewsListFailureAction,
   NewsActionTypes,
   SearchNewsListSuccessAction,
 } from './NewsActions';
@@ -33,13 +32,6 @@ export const searchNewsSuccess = (
   };
 };
 
-export const getNewsFailure = (error: string): GetNewsListFailureAction => {
-  return {
-    type: NewsActionTypes.GET_NEWS_LIST_FAILURE,
-    error: error,
-  };
-};
-
 export const getNews = () => {
   return async (dispatch: Dispatch) => {
     dispatch(getNewsStart());
@@ -59,10 +51,7 @@ export const getNews = () => {
           )
         )
       )
-      .catch(() =>
-        // dispatch(getNewsFailure('Could not get News: ' + error.message))
-        dispatch(getNewsSuccess([]))
-      );
+      .catch(() => dispatch(getNewsSuccess([])));
   };
 };
 

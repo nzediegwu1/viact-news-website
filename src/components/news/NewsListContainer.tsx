@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import { Grid } from '@material-ui/core';
 import NewsListState from '../../redux/state/NewsListState';
 import ProgressBar from '../ProgressBar';
-import Alert, { AlertType } from '../Alert';
 import NewsList from './NewsList';
 
 import clsx from 'clsx';
@@ -77,8 +76,6 @@ const NewsListContainer: FunctionComponent<Props> = (props: Props) => {
       <br />
       {newsList.isFetching ? (
         <ProgressBar />
-      ) : newsList.error ? (
-        <Alert type={AlertType.DANGER} message={newsList.error} />
       ) : !newsList.articles.length ? (
         <Grid
           container

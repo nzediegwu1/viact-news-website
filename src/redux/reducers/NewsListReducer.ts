@@ -27,13 +27,6 @@ const NewsListReducer: Reducer<NewsListState, NewsListActions> = (
         isFetching: false,
       };
     }
-    case NewsActionTypes.GET_NEWS_LIST_FAILURE: {
-      return {
-        ...state,
-        isFetching: false,
-        error: action.error,
-      };
-    }
     case NewsActionTypes.SEARCH_NEWS_LIST_SUCCESS: {
       return {
         ...state,
