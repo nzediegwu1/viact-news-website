@@ -1,16 +1,7 @@
 import React from 'react';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-} from '@material-ui/core';
-import {
-  createStyles,
-  Theme,
-  makeStyles,
-} from '@material-ui/core/styles';
-import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,19 +40,6 @@ const NavigationBar: React.FunctionComponent = ({ children }) => {
             Viact News
           </Typography>
           {children}
-          {/* <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div> */}
         </Toolbar>
       </AppBar>
     </div>

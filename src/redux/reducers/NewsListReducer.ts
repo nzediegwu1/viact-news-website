@@ -6,6 +6,7 @@ const initialState: NewsListState = {
   articles: [],
   isFetching: false,
   totalResults: 0,
+  originalArticles: [],
 };
 const NewsListReducer: Reducer<NewsListState, NewsListActions> = (
   state = initialState,
@@ -22,6 +23,7 @@ const NewsListReducer: Reducer<NewsListState, NewsListActions> = (
       return {
         ...state,
         articles: action.articles,
+        originalArticles: action.articles,
         isFetching: false,
       };
     }
@@ -30,6 +32,13 @@ const NewsListReducer: Reducer<NewsListState, NewsListActions> = (
         ...state,
         isFetching: false,
         error: action.error,
+      };
+    }
+    case NewsActionTypes.SEARCH_NEWS_LIST_SUCCESS: {
+      return {
+        ...state,
+        articles: action.articles,
+        isFetching: false,
       };
     }
     default:

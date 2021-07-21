@@ -33,6 +33,7 @@ const NewsListContainer: FunctionComponent<Props> = (props: Props) => {
         </Grid>
       ) : (
         <NewsList news={newsList.articles} />
+        // <NewsList />
       );
     }
   }
