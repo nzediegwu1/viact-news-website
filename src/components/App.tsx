@@ -14,10 +14,6 @@ interface Props {
 }
 
 export class App extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   componentDidMount = () => {
     if (!this.props.newsList.articles.length) this.props.getNews();
   };

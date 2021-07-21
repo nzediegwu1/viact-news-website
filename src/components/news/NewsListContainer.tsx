@@ -12,7 +12,7 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core/styles';
-import { Typography, Toolbar, Button, Container } from '@material-ui/core';
+import { Typography, Toolbar, Container } from '@material-ui/core';
 import { searchNews } from '../../redux/actions/NewsListActionCreators';
 import { connect } from 'react-redux';
 import NewsSearch from './NewsSearch';
@@ -85,13 +85,15 @@ const NewsListContainer: FunctionComponent<Props> = (props: Props) => {
           spacing={0}
           direction="column"
           alignItems="center"
-          justify="center"
-          style={{ minHeight: '100vh' }}
+          justifyContent="center"
+          style={{ minHeight: '100%', lineHeight: '8em' }}
         >
-          <h2 className="font-italic">No articles found.</h2>
-          <span role="img" aria-label="doh!">
-            😓
-          </span>
+          <h2 className="font-italic">
+            No articles found.{' '}
+            <span role="img" aria-label="doh!">
+              😓
+            </span>
+          </h2>
         </Grid>
       ) : (
         <NewsList news={newsList.articles} />

@@ -13,8 +13,8 @@ const ProgressBar: React.FunctionComponent<Props> = (props: Props) => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
-      style={{ minHeight: '100vh' }}
+      justifyContent="center"
+      style={{ minHeight: '100%', lineHeight: '8em' }}
     >
       <h2 className="font-italic">{progressMessage}</h2>
       <CircularProgress />

@@ -77,7 +77,7 @@ class NewsSearch extends React.Component<Props, State> {
 
   debouncedSearchNews = debounce(() => {
     this.props.onSearchNews(this.state.value);
-  }, 0);
+  }, 300);
 
   render() {
     const { classes } = this.props;

@@ -1,10 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import dayjs from 'dayjs';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Table,
   TableBody,
@@ -24,12 +20,9 @@ import {
 import NewsModel from '../../api/model/NewsModel';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
+  if (b[orderBy] < a[orderBy]) return -1;
+  if (b[orderBy] > a[orderBy]) return 1;
+
   return 0;
 }
 
@@ -252,6 +245,7 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
                                   paddingTop: '1em',
                                   paddingBottom: '1em',
                                 }}
+                                alt={row.title}
                                 src={row.image}
                               />
                             </CardActionArea>
@@ -278,7 +272,7 @@ const NewsList: FunctionComponent<Props> = (props: Props) => {
                           {dayjs(row.date).format('hh:mm a')}
                         </TableCell>
                         <TableCell width="10%" align="right">
-                          <a target="_blank" rel="noopener" href={row.url}>
+                          <a target="_blank" rel="noreferrer" href={row.url}>
                             <Button variant="contained" color="primary">
                               Link
                             </Button>

@@ -59,8 +59,9 @@ export const getNews = () => {
           )
         )
       )
-      .catch((error) =>
-        dispatch(getNewsFailure('Could not get News: ' + error.message))
+      .catch(() =>
+        // dispatch(getNewsFailure('Could not get News: ' + error.message))
+        dispatch(getNewsSuccess([]))
       );
   };
 };
