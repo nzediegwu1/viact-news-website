@@ -2,62 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { Grid } from '@material-ui/core';
 import NewsListState from '../../redux/state/NewsListState';
 import ProgressBar from '../ProgressBar';
-import NewsList from './NewsList';
+import NewsList from './NewsList/NewsList';
 
-import clsx from 'clsx';
-import {
-  createStyles,
-  lighten,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles';
-import { Typography, Toolbar, Container } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { searchNews } from '../../redux/actions/NewsListActionCreators';
 import { connect } from 'react-redux';
-import NewsSearch from './NewsSearch';
-
-const useToolbarStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
-    },
-    highlight:
-      theme.palette.type === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: '1 1 100%',
-    },
-  })
-);
-
-const EnhancedTableToolbar = ({ children }: any) => {
-  const classes = useToolbarStyles();
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: false,
-      })}
-    >
-      <Typography
-        className={classes.title}
-        variant="h6"
-        id="tableTitle"
-        component="div"
-      >
-        <div style={{ display: 'flex' }}>{children} &nbsp;</div>
-      </Typography>
-    </Toolbar>
-  );
-};
+import NewsSearch from './NewsSearch/NewsSearch';
+import EnhancedTableToolbar from './EnhancedToolBar/EnhancedToolbar';
 
 interface Props {
   newsList: NewsListState;
